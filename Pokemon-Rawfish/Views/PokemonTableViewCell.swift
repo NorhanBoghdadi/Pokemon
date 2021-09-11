@@ -20,11 +20,11 @@ class PokemonTableViewCell: UITableViewCell {
         pokemonName = UILabel()
         pokemonName.translatesAutoresizingMaskIntoConstraints = false
         pokemonName.font = UIFont.systemFont(ofSize: 20)
-        pokemonName.textColor = .orange
+        pokemonName.textColor = .gray
         
-    
+        
+//        contentView.backgroundColor = .gray
         contentView.addSubview(pokemonName)
-        contentView.backgroundColor = .black
         setupConstraints()
     }
     
@@ -38,6 +38,7 @@ class PokemonTableViewCell: UITableViewCell {
     func configure(for pokemonElement: Result){
         
         pokemonName.text = pokemonElement.name
+
     }
     
     required init?(coder: NSCoder) {

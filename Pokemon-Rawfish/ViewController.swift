@@ -12,6 +12,8 @@ class ViewController: UIViewController {
     var pokemonsTableView: UITableView!
     var pokemonElement = [Result]()
     
+    var sortSwitch: UISwitch!
+    
     var reuseIden = "Pokemon Identifier"
 
     
@@ -27,11 +29,14 @@ class ViewController: UIViewController {
         pokemonsTableView.dataSource = self
         pokemonsTableView.delegate = self
         pokemonsTableView.register(PokemonTableViewCell.self, forCellReuseIdentifier: reuseIden)
-        pokemonsTableView.backgroundColor = .black
-        
+        pokemonsTableView.backgroundColor = .white
+        pokemonsTableView.separatorColor = .white
         pokemonsTableView.reloadData()
-        
         view.addSubview(pokemonsTableView)
+        
+        sortSwitch = UISwitch()
+        sortSwitch.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(sortSwitch)
         
         setupConstraints()
         getPokemons()
@@ -44,6 +49,10 @@ class ViewController: UIViewController {
             pokemonsTableView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.75),
             pokemonsTableView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8)
         
+        ])
+        NSLayoutConstraint.activate([
+            sortSwitch.leadingAnchor.constraint(equalTo: pokemonsTableView.leadingAnchor),
+            sortSwitch.bottomAnchor.constraint(equalTo: pokemonsTableView.topAnchor)
         ])
         
     }
@@ -96,10 +105,27 @@ extension ViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = PokemonTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: reuseIden)
-       
-        cell.configure(for: pokemonElement.sorted {
-            $0.name < $1.name
-        }[indexPath.row])
+        
+        if sortSwitch.isOn {
+            sortSwitch.setOn(true, animated: true)
+            cell.configure(for: pokemonElement.sorted {
+                $0.name < $1.name
+            }[indexPath.row])
+            
+        }
+        else {
+            sortSwitch.setOn(false, animated: true)
+
+            cell.configure(for: pokemonElement.sorted {
+                $0.name > $1.name
+            }[indexPath.row])
+        }
+        
+        
+        cell.layer.borderColor = UIColor.gray.cgColor
+        cell.layer.borderWidth = 5
+        cell.layer.cornerRadius = 10
+        cell.backgroundColor = .black
         return cell
         
     }

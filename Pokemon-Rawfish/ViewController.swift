@@ -10,7 +10,7 @@ import UIKit
 class ViewController: UIViewController {
 
     var pokemonsTableView: UITableView!
-    var pokemonElements = [PokemonElements]()
+    var pokemonElement = [Result]()
     
     var reuseIden = "Pokemon Identifier"
 
@@ -19,7 +19,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        view.backgroundColor = .black
+        view.backgroundColor = .white
         
         
         pokemonsTableView = UITableView()
@@ -27,13 +27,14 @@ class ViewController: UIViewController {
         pokemonsTableView.dataSource = self
         pokemonsTableView.delegate = self
         pokemonsTableView.register(PokemonTableViewCell.self, forCellReuseIdentifier: reuseIden)
-        pokemonsTableView.backgroundColor = .white
+        pokemonsTableView.backgroundColor = .black
         
         pokemonsTableView.reloadData()
         
         view.addSubview(pokemonsTableView)
         
         setupConstraints()
+        getPokemons()
         
     }
     func setupConstraints() {
@@ -46,17 +47,59 @@ class ViewController: UIViewController {
         ])
         
     }
+    
+    
+    func getPokemons(){
+
+        let url = "https://pokeapi.co/api/v2/pokemon/"
+        var request = URLRequest(url: URL(string: url)!)
+
+        request.httpMethod = "GET"
+
+        let config = URLSessionConfiguration.default
+        let session = URLSession(configuration: config, delegate: nil, delegateQueue:OperationQueue.main)
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if (error != nil){
+                print("error")
+            }
+
+            guard let data = data else { return }
+
+            do {
+                let jsonData = try JSONDecoder().decode(PokemonElements.self, from: data)
+                self.pokemonElement = jsonData.results
+                
+           
+                DispatchQueue.main.async {
+                    self.pokemonsTableView.reloadData()
+                }
+
+            }
+            catch {
+                print(error)
+            }
+
+
+        }
+
+        task.resume()
+
+    }
+    
 
 
 }
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return pokemonElements.count
+        return pokemonElement.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = PokemonTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: reuseIden)
-        
+       
+        cell.configure(for: pokemonElement.sorted {
+            $0.name < $1.name
+        }[indexPath.row])
         return cell
         
     }

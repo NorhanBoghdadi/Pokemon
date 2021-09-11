@@ -11,6 +11,8 @@ class ViewController: UIViewController {
 
     var pokemonsTableView: UITableView!
     var pokemonElements = [PokemonElements]()
+    
+    var reuseIden = "Pokemon Identifier"
 
     
     override func viewDidLoad() {
@@ -22,9 +24,9 @@ class ViewController: UIViewController {
         
         pokemonsTableView = UITableView()
         pokemonsTableView.translatesAutoresizingMaskIntoConstraints = false
-//        pokemonsTableView.dataSource = self
-//        pokemonsTableView.delegate = self
-//        pokemonsTableView.register(<#T##nib: UINib?##UINib?#>, forCellReuseIdentifier: <#T##String#>)
+        pokemonsTableView.dataSource = self
+        pokemonsTableView.delegate = self
+        pokemonsTableView.register(PokemonTableViewCell.self, forCellReuseIdentifier: reuseIden)
         pokemonsTableView.backgroundColor = .white
         
         pokemonsTableView.reloadData()
@@ -53,7 +55,13 @@ extension ViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        <#code#>
+        let cell = PokemonTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: reuseIden)
+        
+        return cell
+        
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return (view.frame.height) / 5
     }
 }
 extension ViewController: UITableViewDelegate {

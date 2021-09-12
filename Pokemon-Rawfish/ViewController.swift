@@ -9,12 +9,15 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    var pokemonsTableView: UITableView!
-    var pokemonElement = [Result]()
+    private var pokemonsTableView: UITableView!
+    private var pokemonElement = [Result]()
+
+    private var sortSwitch: UISwitch!
+    private let refreshControl = UIRefreshControl()
     
-    var sortSwitch: UISwitch!
+    private var reuseIden = "Pokemon Identifier"
     
-    var reuseIden = "Pokemon Identifier"
+    
 
     
     override func viewDidLoad() {
@@ -31,8 +34,11 @@ class ViewController: UIViewController {
         pokemonsTableView.register(PokemonTableViewCell.self, forCellReuseIdentifier: reuseIden)
         pokemonsTableView.backgroundColor = .white
         pokemonsTableView.separatorColor = .white
-        pokemonsTableView.reloadData()
         view.addSubview(pokemonsTableView)
+        
+        pokemonsTableView.addSubview(refreshControl)
+        refreshControl.addTarget(self, action: #selector(refreshPokemons(_:)), for: .valueChanged)
+
         
         sortSwitch = UISwitch()
         sortSwitch.translatesAutoresizingMaskIntoConstraints = false
@@ -92,10 +98,14 @@ class ViewController: UIViewController {
         }
 
         task.resume()
+        refreshControl.endRefreshing()
 
     }
     
-
+    @objc private func refreshPokemons(_ sender: Any) {
+        getPokemons()
+    }
+    
 
 }
 extension ViewController: UITableViewDataSource {

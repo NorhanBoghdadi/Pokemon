@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class HomeViewController: UIViewController {
 
     private var pokemonsTableView: UITableView!
     private var pokemonElement = [Result]()
@@ -108,7 +108,7 @@ class ViewController: UIViewController {
     
 
 }
-extension ViewController: UITableViewDataSource {
+extension HomeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return pokemonElement.count
     }
@@ -143,7 +143,7 @@ extension ViewController: UITableViewDataSource {
         return (view.frame.height) / 5
     }
 }
-extension ViewController: UITableViewDelegate {
+extension HomeViewController: UITableViewDelegate {
     
 }
 

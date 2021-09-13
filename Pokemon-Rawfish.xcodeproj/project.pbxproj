@@ -12,6 +12,8 @@
 		51771DC226ED171A00A8186D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51771DC126ED171A00A8186D /* ViewController.swift */; };
 		51771DC726ED171C00A8186D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 51771DC626ED171C00A8186D /* Assets.xcassets */; };
 		51771DCA26ED171C00A8186D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 51771DC826ED171C00A8186D /* LaunchScreen.storyboard */; };
+		51771DDE26ED253900A8186D /* PokemonElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51771DDD26ED253900A8186D /* PokemonElements.swift */; };
+		51771DE526ED32A900A8186D /* PokemonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51771DE426ED32A900A8186D /* PokemonTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,8 @@
 		51771DC626ED171C00A8186D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		51771DC926ED171C00A8186D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		51771DCB26ED171C00A8186D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		51771DDD26ED253900A8186D /* PokemonElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonElements.swift; sourceTree = "<group>"; };
+		51771DE426ED32A900A8186D /* PokemonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,14 +58,40 @@
 		51771DBC26ED171A00A8186D /* Pokemon-Rawfish */ = {
 			isa = PBXGroup;
 			children = (
-				51771DBD26ED171A00A8186D /* AppDelegate.swift */,
-				51771DBF26ED171A00A8186D /* SceneDelegate.swift */,
+				51771DDC26ED24F100A8186D /* Models */,
+				51771DDB26ED24E700A8186D /* Views */,
+				51771DD926ED24BF00A8186D /* Delegates */,
 				51771DC126ED171A00A8186D /* ViewController.swift */,
 				51771DC626ED171C00A8186D /* Assets.xcassets */,
 				51771DC826ED171C00A8186D /* LaunchScreen.storyboard */,
 				51771DCB26ED171C00A8186D /* Info.plist */,
 			);
 			path = "Pokemon-Rawfish";
+			sourceTree = "<group>";
+		};
+		51771DD926ED24BF00A8186D /* Delegates */ = {
+			isa = PBXGroup;
+			children = (
+				51771DBD26ED171A00A8186D /* AppDelegate.swift */,
+				51771DBF26ED171A00A8186D /* SceneDelegate.swift */,
+			);
+			path = Delegates;
+			sourceTree = "<group>";
+		};
+		51771DDB26ED24E700A8186D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				51771DE426ED32A900A8186D /* PokemonTableViewCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		51771DDC26ED24F100A8186D /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				51771DDD26ED253900A8186D /* PokemonElements.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -135,6 +165,8 @@
 			files = (
 				51771DC226ED171A00A8186D /* ViewController.swift in Sources */,
 				51771DBE26ED171A00A8186D /* AppDelegate.swift in Sources */,
+				51771DDE26ED253900A8186D /* PokemonElements.swift in Sources */,
+				51771DE526ED32A900A8186D /* PokemonTableViewCell.swift in Sources */,
 				51771DC026ED171A00A8186D /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

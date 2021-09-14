@@ -144,6 +144,21 @@ extension HomeViewController: UITableViewDataSource {
     }
 }
 extension HomeViewController: UITableViewDelegate {
-    
-}
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("Selected")
+        print(pokemonElement.sorted {
+            $0.name > $1.name
+        }[indexPath.row])
 
+        pokemonsTableView.deselectRow(at: indexPath, animated: true)
+        
+        let detailsView = DetailsViewController()
+        detailsView.url = pokemonElement.sorted {
+            $0.name > $1.name
+        }[indexPath.row].url
+
+        present(detailsView, animated: true, completion: nil)
+        
+
+    }
+}

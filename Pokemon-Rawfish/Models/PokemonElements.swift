@@ -12,7 +12,7 @@ import Foundation
 struct PokemonElements: Codable {
     let count: Int
     let next: String
-    let previous: JSONNull?
+    fileprivate let previous: JSONNull?
     let results: [Result]
 }
 
@@ -24,7 +24,7 @@ struct Result: Codable {
 
 // MARK: - Encode/decode helpers
 
-class JSONNull: Codable, Hashable {
+private class JSONNull: Codable, Hashable {
 
     func hash(into hasher: inout Hasher) {
        

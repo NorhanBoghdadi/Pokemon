@@ -15,6 +15,7 @@
 		51771DDE26ED253900A8186D /* PokemonElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51771DDD26ED253900A8186D /* PokemonElements.swift */; };
 		51771DE526ED32A900A8186D /* PokemonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51771DE426ED32A900A8186D /* PokemonTableViewCell.swift */; };
 		51771DED26EFFBEE00A8186D /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51771DEC26EFFBEE00A8186D /* DetailsViewController.swift */; };
+		51771DF026F0C2FC00A8186D /* PokemonDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51771DEF26F0C2FB00A8186D /* PokemonDetails.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		51771DDD26ED253900A8186D /* PokemonElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonElements.swift; sourceTree = "<group>"; };
 		51771DE426ED32A900A8186D /* PokemonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonTableViewCell.swift; sourceTree = "<group>"; };
 		51771DEC26EFFBEE00A8186D /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
+		51771DEF26F0C2FB00A8186D /* PokemonDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonDetails.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				51771DDD26ED253900A8186D /* PokemonElements.swift */,
+				51771DEF26F0C2FB00A8186D /* PokemonDetails.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -166,6 +169,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				51771DF026F0C2FC00A8186D /* PokemonDetails.swift in Sources */,
 				51771DC226ED171A00A8186D /* HomeViewController.swift in Sources */,
 				51771DBE26ED171A00A8186D /* AppDelegate.swift in Sources */,
 				51771DDE26ED253900A8186D /* PokemonElements.swift in Sources */,

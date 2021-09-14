@@ -21,7 +21,7 @@ struct PokemonDetails: Codable {
     let order: Int
     fileprivate let pastTypes: [JSONAny]
     let species: Species
-    fileprivate let sprites: Sprites
+    let sprites: Sprites
     let stats: [Stat]
     let types: [TypeElement]
     let weight: Int
@@ -139,15 +139,15 @@ struct Versions: Codable {
 }
 
 // MARK: - Sprites
-private class Sprites: Codable {
+class Sprites: Codable {
     let backDefault: String
-    let backFemale: JSONNull?
+    fileprivate let backFemale: JSONNull?
     let backShiny: String
-    let backShinyFemale: JSONNull?
+    fileprivate let backShinyFemale: JSONNull?
     let frontDefault: String
-    let frontFemale: JSONNull?
+    fileprivate let frontFemale: JSONNull?
     let frontShiny: String
-    let frontShinyFemale: JSONNull?
+    fileprivate let frontShinyFemale: JSONNull?
     let other: Other?
     let versions: Versions?
     let animated: Sprites?
@@ -164,7 +164,7 @@ private class Sprites: Codable {
         case other, versions, animated
     }
 
-    init(backDefault: String, backFemale: JSONNull?, backShiny: String, backShinyFemale: JSONNull?, frontDefault: String, frontFemale: JSONNull?, frontShiny: String, frontShinyFemale: JSONNull?, other: Other?, versions: Versions?, animated: Sprites?) {
+    fileprivate init(backDefault: String, backFemale: JSONNull?, backShiny: String, backShinyFemale: JSONNull?, frontDefault: String, frontFemale: JSONNull?, frontShiny: String, frontShinyFemale: JSONNull?, other: Other?, versions: Versions?, animated: Sprites?) {
         self.backDefault = backDefault
         self.backFemale = backFemale
         self.backShiny = backShiny

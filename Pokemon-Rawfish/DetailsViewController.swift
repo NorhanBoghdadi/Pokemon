@@ -27,7 +27,7 @@ class DetailsViewController: UIViewController {
         
         let newTopView = UIView(frame: CGRect(x: 0, y: 0 , width: Int(view.frame.width), height: Int(view.frame.height) / 3 ))
         
-        newTopView.backgroundColor = .red
+        newTopView.backgroundColor = .darkGray
         newTopView.layer.cornerRadius = 10
         view.addSubview(newTopView)
         
@@ -41,7 +41,7 @@ class DetailsViewController: UIViewController {
         pokemonImage.layer.borderColor = UIColor.darkGray.cgColor
         pokemonImage.layer.borderWidth = 2.0
         pokemonImage.image = UIImage(named: "p2")
-        pokemonImage.backgroundColor = .black
+        pokemonImage.backgroundColor = .white
         newTopView.addSubview(pokemonImage)
         
         nameLabel = UILabel()
@@ -81,7 +81,6 @@ class DetailsViewController: UIViewController {
                 self.moves = jsonData.moves
                 self.imageUrl = (jsonData.sprites.other?.officialArtwork.frontDefault)!
             
-                print(moves.count)
                 
                 DispatchQueue.main.async {
                     self.movesTableView.reloadData()
@@ -103,7 +102,6 @@ class DetailsViewController: UIViewController {
 
 extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(moves.count)
         return moves.count
     }
     

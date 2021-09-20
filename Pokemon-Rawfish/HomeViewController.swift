@@ -16,6 +16,7 @@ class HomeViewController: UIViewController {
     private var sortSwitch: UISwitch!
     private let refreshControl = UIRefreshControl()
 
+
     private var reuseIden = "Pokemon Identifier"
 
 
@@ -45,6 +46,8 @@ class HomeViewController: UIViewController {
         sortSwitch = UISwitch()
         sortSwitch.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(sortSwitch)
+        
+     
 
         setupConstraints()
         getPokemons()
@@ -89,6 +92,7 @@ class HomeViewController: UIViewController {
 
                 DispatchQueue.main.async {
                     self.pokemonsTableView.reloadData()
+
                 }
 
             }

@@ -18,6 +18,8 @@ class DetailsViewController: UIViewController {
     private var nameLabel: UILabel!
     private var pokemonImage: UIImageView!
     private var movesTableView: UITableView!
+    var activityIndicator = UIActivityIndicatorView(style: .large)
+
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +29,7 @@ class DetailsViewController: UIViewController {
         
         let newTopView = UIView(frame: CGRect(x: 0, y: 0 , width: Int(view.frame.width), height: Int(view.frame.height) / 3 ))
         
-        newTopView.backgroundColor = .darkGray
+        newTopView.backgroundColor = .black
         newTopView.layer.cornerRadius = 10
         view.addSubview(newTopView)
         
@@ -40,7 +42,6 @@ class DetailsViewController: UIViewController {
         pokemonImage.clipsToBounds = true
         pokemonImage.layer.borderColor = UIColor.darkGray.cgColor
         pokemonImage.layer.borderWidth = 2.0
-        pokemonImage.image = UIImage(named: "p2")
         pokemonImage.backgroundColor = .white
         newTopView.addSubview(pokemonImage)
         
@@ -51,13 +52,20 @@ class DetailsViewController: UIViewController {
         
         movesTableView = UITableView()
         movesTableView.frame = CGRect(x: 0, y: newTopView.frame.height, width: view.frame.width, height: (view.frame.height) * 0.6)
-        movesTableView.backgroundColor = .black
+//        movesTableView.backgroundColor = .black
         movesTableView.delegate = self
         movesTableView.dataSource = self
         movesTableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIden)
         view.addSubview(movesTableView)
         
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(activityIndicator)
+        activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+
+        activityIndicator.startAnimating()
         getPokemonsDetails()
+
     }
     
 
@@ -84,6 +92,10 @@ class DetailsViewController: UIViewController {
                 
                 DispatchQueue.main.async {
                     self.movesTableView.reloadData()
+                    pokemonImage.image = getImage(from: imageUrl)
+                    self.activityIndicator.stopAnimating()
+
+
                 }
 
             }
@@ -96,6 +108,29 @@ class DetailsViewController: UIViewController {
 
         task.resume()
 
+    }
+    
+    func getImage(from string: String) -> UIImage? {
+        //2. Get valid URL
+        guard let url = URL(string: string)
+            else {
+                print("Unable to create URL")
+                return nil
+        }
+        
+        var image: UIImage? = nil
+        do {
+            //3. Get valid data
+            let data = try Data(contentsOf: url, options: [])
+            
+            //4. Make image
+            image = UIImage(data: data)
+        }
+        catch {
+            print(error.localizedDescription)
+        }
+        
+        return image
     }
 
 }

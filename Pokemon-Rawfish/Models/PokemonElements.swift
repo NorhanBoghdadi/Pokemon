@@ -12,40 +12,13 @@ import Foundation
 struct PokemonElements: Codable {
     let count: Int
     let next: String
-    fileprivate let previous: JSONNull?
-    let results: [Result]
+    let results: [PokemonResult]
+    
 }
 
 // MARK: - Result
-struct Result: Codable {
+struct PokemonResult: Codable {
     let name: String
     let url: String
 }
 
-// MARK: - Encode/decode helpers
-
-private class JSONNull: Codable, Hashable {
-
-    func hash(into hasher: inout Hasher) {
-       
-    }
-    
-    public static func == (lhs: JSONNull, rhs: JSONNull) -> Bool {
-        return true
-    }
-
-    
-    public init() {}
-
-    public required init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        if !container.decodeNil() {
-            throw DecodingError.typeMismatch(JSONNull.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for JSONNull"))
-        }
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encodeNil()
-    }
-}

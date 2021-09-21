@@ -25,11 +25,11 @@ class DetailsViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(white: 0.5, alpha: 0.2)
         
         let newTopView = UIView(frame: CGRect(x: 0, y: 0 , width: Int(view.frame.width), height: Int(view.frame.height) / 3 ))
         
-        newTopView.backgroundColor = .black
+        newTopView.backgroundColor = UIColor(white: 0.7, alpha: 0.2)
         newTopView.layer.cornerRadius = 10
         view.addSubview(newTopView)
         
@@ -42,20 +42,21 @@ class DetailsViewController: UIViewController {
         pokemonImage.clipsToBounds = true
         pokemonImage.layer.borderColor = UIColor.darkGray.cgColor
         pokemonImage.layer.borderWidth = 2.0
-        pokemonImage.backgroundColor = .white
+        pokemonImage.backgroundColor = UIColor(white: 0.7, alpha: 0.2)
         newTopView.addSubview(pokemonImage)
         
         nameLabel = UILabel()
         nameLabel.text = pokemonName
-        nameLabel.frame = CGRect(x: 0, y: 0, width: 100, height: 50)
+        nameLabel.textColor = .white
+        nameLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
         newTopView.addSubview(nameLabel)
         
         movesTableView = UITableView()
         movesTableView.frame = CGRect(x: 0, y: newTopView.frame.height, width: view.frame.width, height: (view.frame.height) * 0.6)
-//        movesTableView.backgroundColor = .black
         movesTableView.delegate = self
         movesTableView.dataSource = self
         movesTableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIden)
+        movesTableView.backgroundColor = UIColor(white: 0, alpha: 1)
         view.addSubview(movesTableView)
         
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -64,52 +65,46 @@ class DetailsViewController: UIViewController {
         activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
 
         activityIndicator.startAnimating()
-        getPokemonsDetails()
+        
+        make(request: URL(string: url)!)
 
     }
     
-
-    func getPokemonsDetails(){
-
-        var request = URLRequest(url: URL(string: url)!)
-
+    func make(request withURL: URL) {
+        var request = URLRequest(url: withURL)
         request.httpMethod = "GET"
-
+        send(request: request)
+    }
+    
+    func handle(respone: (Data?, URLResponse?, Error?)) {
+        guard let data = respone.0 else {return }
+        do {
+            (moves, imageUrl) = try process(data: data)
+            updateUI()
+        } catch {
+          
+        }
+    }
+    
+    func send(request: URLRequest) {
         let config = URLSessionConfiguration.default
         let session = URLSession(configuration: config, delegate: nil, delegateQueue:OperationQueue.main)
-        let task = session.dataTask(with: request) { [self] (data, response, error) in
-            if (error != nil){
-                print("error")
-            }
-
-            guard let data = data else { return }
-
-            do {
-                let jsonData = try JSONDecoder().decode(PokemonDetails.self, from: data)
-                self.moves = jsonData.moves
-                self.imageUrl = (jsonData.sprites.other?.officialArtwork.frontDefault)!
-            
-                
-                DispatchQueue.main.async {
-                    self.movesTableView.reloadData()
-                    pokemonImage.image = getImage(from: imageUrl)
-                    self.activityIndicator.stopAnimating()
-
-
-                }
-
-            }
-            catch {
-                print(error)
-            }
-
-
+        let task = session.dataTask(with: request) {[weak self] (data, response, error) in
+            self?.handle(respone: (data, response, error))
         }
-
         task.resume()
-
     }
     
+    func process(data: Data) throws ->  ([Move], String) {
+        let jsonData = try JSONDecoder().decode(PokemonDetails.self, from: data)
+        return (jsonData.moves, (jsonData.sprites.other?.officialArtwork.frontDefault)!)
+    }
+    
+    func updateUI() {
+        activityIndicator.stopAnimating()
+        pokemonImage.image = getImage(from: imageUrl)
+        movesTableView.reloadData()
+    }
     func getImage(from string: String) -> UIImage? {
         //2. Get valid URL
         guard let url = URL(string: string)
@@ -141,9 +136,10 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: cellReuseIden)
-        cell.textLabel?.text = moves[indexPath.row].move.name
-        return cell
+        let cell = movesTableView.dequeueReusableCell(withIdentifier: cellReuseIden)
+        cell!.textLabel?.text = moves[indexPath.row].move.name
+        cell?.textLabel?.textColor = .white
+        return cell!
         
     }
     

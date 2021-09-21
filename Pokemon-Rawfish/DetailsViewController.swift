@@ -35,7 +35,7 @@ class DetailsViewController: UIViewController {
         
         
         pokemonImage = UIImageView()
-        pokemonImage.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
+        pokemonImage.frame = CGRect(x: 0, y: 0, width: (newTopView.frame.height) / 2, height: (newTopView.frame.height) / 2)
         pokemonImage.layer.cornerRadius = pokemonImage.layer.bounds.width / 2
         pokemonImage.center.x = newTopView.bounds.midX
         pokemonImage.center.y = newTopView.bounds.midY

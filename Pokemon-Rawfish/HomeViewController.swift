@@ -7,27 +7,29 @@
 
 import UIKit
 
-class HomeViewController: UIViewController {
+class HomeViewController: UIViewController, UISearchControllerDelegate {
 
     private var pokemonsTableView: UITableView!
     private var pokemonElement = [Result]()
 
-
     private var sortSwitch: UISwitch!
     private let refreshControl = UIRefreshControl()
-
+    
+    
+    var searchController = UISearchController(searchResultsController: nil)
 
     private var reuseIden = "Pokemon Identifier"
 
 
 
 
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
 
         view.backgroundColor = .white
+        title = "Change order"
 
 
         pokemonsTableView = UITableView()
@@ -42,30 +44,38 @@ class HomeViewController: UIViewController {
         pokemonsTableView.addSubview(refreshControl)
         refreshControl.addTarget(self, action: #selector(refreshPokemons(_:)), for: .valueChanged)
 
-
-        sortSwitch = UISwitch()
+        sortSwitch = UISwitch(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
         sortSwitch.translatesAutoresizingMaskIntoConstraints = false
+        sortSwitch.addTarget(self, action: #selector(switchISPressed), for: .valueChanged)
+        sortSwitch.isEnabled = true
         view.addSubview(sortSwitch)
         
-     
-
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: sortSwitch)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector (setupSearchBar))
+        
         setupConstraints()
         getPokemons()
 
     }
+    @objc func setupSearchBar() {
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.searchBar.placeholder = "Search Pokemons "
+        navigationItem.titleView = searchController.searchBar
+//        navigationItem.rightBarButtonItem = nil
+        searchController.becomeFirstResponder()
+
+    }
+    
+   
+    
+    
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            pokemonsTableView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            pokemonsTableView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            pokemonsTableView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.75),
-            pokemonsTableView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8)
-
+            pokemonsTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            pokemonsTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            pokemonsTableView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor)
         ])
-        NSLayoutConstraint.activate([
-            sortSwitch.leadingAnchor.constraint(equalTo: pokemonsTableView.leadingAnchor),
-            sortSwitch.bottomAnchor.constraint(equalTo: pokemonsTableView.topAnchor)
-        ])
-
     }
 
 
@@ -87,11 +97,12 @@ class HomeViewController: UIViewController {
 
             do {
                 let jsonData = try JSONDecoder().decode(PokemonElements.self, from: data)
-                self.pokemonElement = jsonData.results
-
+                self.pokemonElement = self.sortArr(arr: jsonData.results)
 
                 DispatchQueue.main.async {
+                    
                     self.pokemonsTableView.reloadData()
+             
 
                 }
 
@@ -107,11 +118,39 @@ class HomeViewController: UIViewController {
         refreshControl.endRefreshing()
 
     }
+    
+    
 
     @objc private func refreshPokemons(_ sender: Any) {
         getPokemons()
     }
+    
+    func sortArr(arr: [Result]) -> [Result] {
+        return arr.sorted {
+            $0.name < $1.name
+        }
+    }
+    func reverseArr(arr: [Result]) -> [Result] {
+        return arr.sorted {
+            $0.name > $1.name
+        }
+    }
 
+    @objc func switchISPressed(_ sender:UISwitch) {
+        if (sender.isOn == true){
+            sortSwitch.setOn(true, animated: true)
+            pokemonElement = sortArr(arr: pokemonElement)
+            pokemonsTableView.reloadData()
+        }
+        else {
+            sortSwitch.setOn(true, animated: true)
+            pokemonElement = reverseArr(arr: pokemonElement)
+            pokemonsTableView.reloadData()
+        }
+        
+    }
+   
+    
 
 }
 extension HomeViewController: UITableViewDataSource {
@@ -120,31 +159,17 @@ extension HomeViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: reuseIden)
 
-        if sortSwitch.isOn {
-            sortSwitch.setOn(true, animated: true)
-            cell.textLabel?.text = pokemonElement.sorted {
-                $0.name < $1.name
-            }[indexPath.row].name
-
-        }
-        
-        else {
-            sortSwitch.setOn(false, animated: true)
-            cell.textLabel?.text = pokemonElement.sorted {
-                $0.name > $1.name
-            }[indexPath.row].name
-
-        }
+        let cell = pokemonsTableView.dequeueReusableCell(withIdentifier: reuseIden)
 
 
-        cell.layer.borderColor = UIColor.gray.cgColor
-        cell.layer.borderWidth = 5
-        cell.layer.cornerRadius = 10
-        cell.backgroundColor = .black
-        cell.textLabel?.textColor = .white
-        return cell
+        cell!.textLabel?.text = pokemonElement[indexPath.row].name
+        cell!.layer.borderColor = UIColor.lightGray.cgColor
+        cell!.layer.borderWidth = 5
+        cell!.layer.cornerRadius = 10
+        cell!.backgroundColor = UIColor(white: 0.7, alpha: 0.5)
+        cell!.textLabel?.textColor = .black
+        return cell!
 
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -159,32 +184,7 @@ extension HomeViewController: UITableViewDelegate {
         pokemonsTableView.deselectRow(at: indexPath, animated: true)
 
         let detailsView = DetailsViewController()
-        if sortSwitch.isOn {
-            sortSwitch.setOn(true, animated: true)
-            detailsView.url = pokemonElement.sorted {
-                $0.name < $1.name
-            }[indexPath.row].url
-            
-            detailsView.pokemonName = pokemonElement.sorted {
-                $0.name < $1.name
-            }[indexPath.row].name
-            
-            print(detailsView.url)
-
-        }
-        
-        else {
-            sortSwitch.setOn(false, animated: true)
-            detailsView.url = pokemonElement.sorted {
-                $0.name > $1.name
-            }[indexPath.row].url
-            
-            detailsView.pokemonName = pokemonElement.sorted {
-                $0.name > $1.name
-            }[indexPath.row].name
-
-
-        }
+        detailsView.url = pokemonElement[indexPath.row].url
         
         present(detailsView, animated: true, completion: nil)
 

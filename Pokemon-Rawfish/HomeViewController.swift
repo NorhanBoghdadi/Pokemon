@@ -11,6 +11,7 @@ class HomeViewController: UIViewController {
 
     private var pokemonsTableView: UITableView!
     private var pokemonElement = [PokemonResult]()
+    private var filteredPokemon = [PokemonResult]()
     
     private var sortSwitch: UIButton!
     private let refreshControl = UIRefreshControl()
@@ -22,6 +23,7 @@ class HomeViewController: UIViewController {
     private var reuseIden = "Pokemon Identifier"
     let url = URL(string: "https://pokeapi.co/api/v2/pokemon/")!
 
+    
 
 
 
@@ -31,6 +33,7 @@ class HomeViewController: UIViewController {
         // Do any additional setup after loading the view.
 
         view.backgroundColor = .white
+       
         
         pokemonsTableView = UITableView()
         pokemonsTableView.translatesAutoresizingMaskIntoConstraints = false
@@ -57,6 +60,7 @@ class HomeViewController: UIViewController {
         
         setupConstraints()
         make(request: url)
+        
 
     }
     @objc func setupSearchBar() {
@@ -64,7 +68,7 @@ class HomeViewController: UIViewController {
         searchController.searchBar.placeholder = "Search Pokemons "
         navigationItem.titleView = searchController.searchBar
         searchController.becomeFirstResponder()
-        
+        searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
         definesPresentationContext = true
 
@@ -145,24 +149,28 @@ class HomeViewController: UIViewController {
     
         
     }
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
-    }
+//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//
+//    }
    
     
 
 }
+
+
 extension HomeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+       
+        
         return pokemonElement.count
+        
+        
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = pokemonsTableView.dequeueReusableCell(withIdentifier: reuseIden)
-
-
-        cell!.textLabel?.text = pokemonElement[indexPath.row].name
+        cell!.textLabel?.text = pokemonElement[indexPath.row].name.uppercased()
         cell!.layer.borderColor = UIColor(white: 0.7, alpha: 0.2).cgColor
         cell!.layer.borderWidth = 2
         cell!.layer.cornerRadius = 10
@@ -175,6 +183,8 @@ extension HomeViewController: UITableViewDataSource {
         return (view.frame.height) / 7
     }
 }
+
+
 extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("Selected")
@@ -184,11 +194,16 @@ extension HomeViewController: UITableViewDelegate {
 
         let detailsView = DetailsViewController()
         detailsView.url = pokemonElement[indexPath.row].url
+        detailsView.pokemonName = pokemonElement[indexPath.row].name
         
         present(detailsView, animated: true, completion: nil)
-
-
     }
 }
 
 
+extension HomeViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let text = searchController.searchBar.text else { return }
+        print(text)
+    }
+}

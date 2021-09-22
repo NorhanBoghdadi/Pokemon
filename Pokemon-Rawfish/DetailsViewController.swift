@@ -25,11 +25,11 @@ class DetailsViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        view.backgroundColor = UIColor(white: 0.5, alpha: 0.2)
+        view.backgroundColor = .white
         
         let newTopView = UIView(frame: CGRect(x: 0, y: 0 , width: Int(view.frame.width), height: Int(view.frame.height) / 3 ))
         
-        newTopView.backgroundColor = UIColor(white: 0.7, alpha: 0.2)
+        newTopView.backgroundColor = UIColor(white: 1, alpha: 0.2)
         newTopView.layer.cornerRadius = 10
         view.addSubview(newTopView)
         
@@ -46,9 +46,11 @@ class DetailsViewController: UIViewController {
         newTopView.addSubview(pokemonImage)
         
         nameLabel = UILabel()
-        nameLabel.text = pokemonName
-        nameLabel.textColor = .white
-        nameLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
+        nameLabel.text = pokemonName.uppercased()
+        nameLabel.textAlignment = .center
+        nameLabel.textColor = .black
+        nameLabel.font = .boldSystemFont(ofSize: 20)
+        nameLabel.frame = CGRect(x: 0, y: (newTopView.frame.height) * 0.7, width: newTopView.frame.width, height: 100)
         newTopView.addSubview(nameLabel)
         
         movesTableView = UITableView()
@@ -56,7 +58,7 @@ class DetailsViewController: UIViewController {
         movesTableView.delegate = self
         movesTableView.dataSource = self
         movesTableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIden)
-        movesTableView.backgroundColor = UIColor(white: 0, alpha: 1)
+        movesTableView.backgroundColor = UIColor(white: 1, alpha: 0)
         view.addSubview(movesTableView)
         
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -138,7 +140,7 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = movesTableView.dequeueReusableCell(withIdentifier: cellReuseIden)
         cell!.textLabel?.text = moves[indexPath.row].move.name
-        cell?.textLabel?.textColor = .white
+        cell?.textLabel?.textColor = .black
         return cell!
         
     }

@@ -11,7 +11,6 @@ class HomeViewController: UIViewController {
 
     private var pokemonsTableView: UITableView!
     private var pokemonElement = [PokemonResult]()
-    private var filteredPokemon = [PokemonResult]()
     
     private var sortSwitch: UIButton!
     private let refreshControl = UIRefreshControl()
@@ -23,8 +22,6 @@ class HomeViewController: UIViewController {
     private var reuseIden = "Pokemon Identifier"
     let url = URL(string: "https://pokeapi.co/api/v2/pokemon/")!
 
-    
-
 
 
     
@@ -34,7 +31,7 @@ class HomeViewController: UIViewController {
 
         view.backgroundColor = .white
        
-        
+        // MARK: - Declaring Views
         pokemonsTableView = UITableView()
         pokemonsTableView.translatesAutoresizingMaskIntoConstraints = false
         pokemonsTableView.dataSource = self
@@ -60,9 +57,10 @@ class HomeViewController: UIViewController {
         
         setupConstraints()
         make(request: url)
-        
 
     }
+    
+    // MARK: - Setting SearchBar function
     @objc func setupSearchBar() {
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.placeholder = "Search Pokemons "
@@ -73,6 +71,7 @@ class HomeViewController: UIViewController {
         definesPresentationContext = true
 
     }
+    //MARK: - Constraints
         
     func setupConstraints() {
         NSLayoutConstraint.activate([
@@ -82,6 +81,7 @@ class HomeViewController: UIViewController {
         ])
     }
     
+    //MARK: - Handle Networking
     
     func make(request withURL: URL) {
         var request = URLRequest(url: withURL)
@@ -119,7 +119,7 @@ class HomeViewController: UIViewController {
     }
         
 
-
+// MARK: - Additional Functions :
     @objc private func refreshPokemons(_ sender: Any) {
         make(request: url)
     }
@@ -133,7 +133,6 @@ class HomeViewController: UIViewController {
 
     @objc func switchISPressed() {
         if(isSortedZA) {
-        
             pokemonElement = sortArr(arr: pokemonElement)
             sortSwitch.setImage(UIImage(named: "revSort"), for: .normal)
             isSortedZA = false
@@ -147,24 +146,17 @@ class HomeViewController: UIViewController {
 
         }
     
-        
     }
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//
-//    }
-   
-    
+
 
 }
 
+// MARK: - Setting the tableView:
 
 extension HomeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       
         
         return pokemonElement.count
-        
-        
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -188,10 +180,8 @@ extension HomeViewController: UITableViewDataSource {
 extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("Selected")
-        
 
         pokemonsTableView.deselectRow(at: indexPath, animated: true)
-
         let detailsView = DetailsViewController()
         detailsView.url = pokemonElement[indexPath.row].url
         detailsView.pokemonName = pokemonElement[indexPath.row].name
@@ -200,10 +190,12 @@ extension HomeViewController: UITableViewDelegate {
     }
 }
 
-
+//MARK: - Update searchResults: 
 extension HomeViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let text = searchController.searchBar.text else { return }
         print(text)
     }
 }
+
+

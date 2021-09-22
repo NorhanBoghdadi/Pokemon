@@ -24,8 +24,9 @@ class DetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
         view.backgroundColor = .white
+        
+       // MARK: - Declaring Views.
         
         let newTopView = UIView(frame: CGRect(x: 0, y: 0 , width: Int(view.frame.width), height: Int(view.frame.height) / 3 ))
         
@@ -72,6 +73,8 @@ class DetailsViewController: UIViewController {
 
     }
     
+    //MARK: - Handle Networking
+    
     func make(request withURL: URL) {
         var request = URLRequest(url: withURL)
         request.httpMethod = "GET"
@@ -107,6 +110,7 @@ class DetailsViewController: UIViewController {
         pokemonImage.image = getImage(from: imageUrl)
         movesTableView.reloadData()
     }
+    
     func getImage(from string: String) -> UIImage? {
         //2. Get valid URL
         guard let url = URL(string: string)
@@ -129,7 +133,8 @@ class DetailsViewController: UIViewController {
         
         return image
     }
-
+    
+ // MARK: - Setting The TableView
 }
 
 extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {

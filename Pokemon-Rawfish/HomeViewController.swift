@@ -10,25 +10,31 @@ import UIKit
 class HomeViewController: UIViewController {
 
     private var pokemonsTableView: UITableView!
-    private var pokemonElement = [Result]()
-
-
-    private var sortSwitch: UISwitch!
+    private var pokemonElement = [PokemonResult]()
+    private var filteredPokemon = [PokemonResult]()
+    
+    private var sortSwitch: UIButton!
     private let refreshControl = UIRefreshControl()
-
+    
+    
+    var searchController = UISearchController(searchResultsController: nil)
+    
+    var isSortedZA = false
     private var reuseIden = "Pokemon Identifier"
+    let url = URL(string: "https://pokeapi.co/api/v2/pokemon/")!
+
+    
 
 
 
-
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
 
         view.backgroundColor = .white
-
-
+       
+        
         pokemonsTableView = UITableView()
         pokemonsTableView.translatesAutoresizingMaskIntoConstraints = false
         pokemonsTableView.dataSource = self
@@ -40,113 +46,145 @@ class HomeViewController: UIViewController {
 
         pokemonsTableView.addSubview(refreshControl)
         refreshControl.addTarget(self, action: #selector(refreshPokemons(_:)), for: .valueChanged)
-
-
-        sortSwitch = UISwitch()
-        sortSwitch.translatesAutoresizingMaskIntoConstraints = false
+        
+        sortSwitch = UIButton(frame: .zero)
+        sortSwitch.setImage(UIImage(named: "revSort"), for: .normal)
+        sortSwitch.addTarget(self, action: #selector(switchISPressed), for: .touchUpInside)
+        sortSwitch.isEnabled = true
         view.addSubview(sortSwitch)
-
+        
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: sortSwitch)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector (setupSearchBar))
+        
+        
         setupConstraints()
-        getPokemons()
+        make(request: url)
+        
 
     }
+    @objc func setupSearchBar() {
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.searchBar.placeholder = "Search Pokemons "
+        navigationItem.titleView = searchController.searchBar
+        searchController.becomeFirstResponder()
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        definesPresentationContext = true
+
+    }
+        
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            pokemonsTableView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            pokemonsTableView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            pokemonsTableView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.75),
-            pokemonsTableView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8)
-
+            pokemonsTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            pokemonsTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            pokemonsTableView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor)
         ])
-        NSLayoutConstraint.activate([
-            sortSwitch.leadingAnchor.constraint(equalTo: pokemonsTableView.leadingAnchor),
-            sortSwitch.bottomAnchor.constraint(equalTo: pokemonsTableView.topAnchor)
-        ])
-
     }
-
-
-    func getPokemons(){
-
-        let url = "https://pokeapi.co/api/v2/pokemon/"
-        var request = URLRequest(url: URL(string: url)!)
-
+    
+    
+    func make(request withURL: URL) {
+        var request = URLRequest(url: withURL)
         request.httpMethod = "GET"
-
+        send(request: request)
+    }
+    
+    func handle(respone: (Data?, URLResponse?, Error?)) {
+        guard let data = respone.0 else {return }
+        do {
+            pokemonElement = try process(data: data)
+            updateUI()
+        } catch {
+          
+        }
+    }
+    
+    func send(request: URLRequest) {
         let config = URLSessionConfiguration.default
         let session = URLSession(configuration: config, delegate: nil, delegateQueue:OperationQueue.main)
-        let task = session.dataTask(with: request) { (data, response, error) in
-            if (error != nil){
-                print("error")
-            }
-
-            guard let data = data else { return }
-
-            do {
-                let jsonData = try JSONDecoder().decode(PokemonElements.self, from: data)
-                self.pokemonElement = jsonData.results
-
-
-                DispatchQueue.main.async {
-                    self.pokemonsTableView.reloadData()
-                }
-
-            }
-            catch {
-                print(error)
-            }
-
-
+        let task = session.dataTask(with: request) {[weak self] (data, response, error) in
+            self?.handle(respone: (data, response, error))
         }
-
         task.resume()
-        refreshControl.endRefreshing()
-
     }
+    
+    func process(data: Data) throws ->  [PokemonResult] {
+        let jsonData = try JSONDecoder().decode(PokemonElements.self, from: data)
+        return sortArr(arr: jsonData.results)
+    }
+    
+    func updateUI() {
+        refreshControl.endRefreshing()
+        pokemonsTableView.reloadData()
+    }
+        
+
 
     @objc private func refreshPokemons(_ sender: Any) {
-        getPokemons()
+        make(request: url)
     }
 
+    func sortArr(arr: [PokemonResult]) -> [PokemonResult] {
+        return arr.sorted {
+            $0.name < $1.name
+        }
+    }
+    
+
+    @objc func switchISPressed() {
+        if(isSortedZA) {
+        
+            pokemonElement = sortArr(arr: pokemonElement)
+            sortSwitch.setImage(UIImage(named: "revSort"), for: .normal)
+            isSortedZA = false
+            pokemonsTableView.reloadData()
+        }
+        else {
+            sortSwitch.setImage(UIImage(named: "sort"), for: .normal)
+            pokemonElement = pokemonElement.reversed()
+            isSortedZA = true
+            pokemonsTableView.reloadData()
+
+        }
+    
+        
+    }
+//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//
+//    }
+   
+    
 
 }
+
+
 extension HomeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+       
+        
         return pokemonElement.count
+        
+        
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: reuseIden)
 
-        if sortSwitch.isOn {
-            sortSwitch.setOn(true, animated: true)
-            cell.textLabel?.text = pokemonElement.sorted {
-                $0.name < $1.name
-            }[indexPath.row].name
-
-        }
-        
-        else {
-            sortSwitch.setOn(false, animated: true)
-            cell.textLabel?.text = pokemonElement.sorted {
-                $0.name > $1.name
-            }[indexPath.row].name
-
-        }
-
-
-        cell.layer.borderColor = UIColor.gray.cgColor
-        cell.layer.borderWidth = 5
-        cell.layer.cornerRadius = 10
-        cell.backgroundColor = .black
-        cell.textLabel?.textColor = .white
-        return cell
+        let cell = pokemonsTableView.dequeueReusableCell(withIdentifier: reuseIden)
+        cell!.textLabel?.text = pokemonElement[indexPath.row].name.uppercased()
+        cell!.layer.borderColor = UIColor(white: 0.7, alpha: 0.2).cgColor
+        cell!.layer.borderWidth = 2
+        cell!.layer.cornerRadius = 10
+        cell!.backgroundColor = UIColor(white: 0.7, alpha: 0.2)
+        cell!.textLabel?.textColor = .black
+        return cell!
 
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return (view.frame.height) / 5
+        return (view.frame.height) / 7
     }
 }
+
+
 extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("Selected")
@@ -155,37 +193,17 @@ extension HomeViewController: UITableViewDelegate {
         pokemonsTableView.deselectRow(at: indexPath, animated: true)
 
         let detailsView = DetailsViewController()
-        if sortSwitch.isOn {
-            sortSwitch.setOn(true, animated: true)
-            detailsView.url = pokemonElement.sorted {
-                $0.name < $1.name
-            }[indexPath.row].url
-            
-            detailsView.pokemonName = pokemonElement.sorted {
-                $0.name < $1.name
-            }[indexPath.row].name
-            
-            print(detailsView.url)
-
-        }
-        
-        else {
-            sortSwitch.setOn(false, animated: true)
-            detailsView.url = pokemonElement.sorted {
-                $0.name > $1.name
-            }[indexPath.row].url
-            
-            detailsView.pokemonName = pokemonElement.sorted {
-                $0.name > $1.name
-            }[indexPath.row].name
-
-
-        }
+        detailsView.url = pokemonElement[indexPath.row].url
+        detailsView.pokemonName = pokemonElement[indexPath.row].name
         
         present(detailsView, animated: true, completion: nil)
-
-
     }
 }
 
 
+extension HomeViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let text = searchController.searchBar.text else { return }
+        print(text)
+    }
+}

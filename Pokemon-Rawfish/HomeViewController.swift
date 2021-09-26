@@ -9,6 +9,14 @@ import UIKit
 
 class HomeViewController: UIViewController {
 
+    let imageLoader = ImageLoader()
+    let imgLink = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
+    
+    var loadedImg: UIImage?
+    var cellImg: UIImage {
+        loadedImg ?? UIImage(named: "2")!
+    }
+    
     private var pokemonsTableView: UITableView!
     private var pokemonElement = [PokemonResult]()
     
@@ -57,6 +65,7 @@ class HomeViewController: UIViewController {
         
         setupConstraints()
         make(request: url)
+        loadImage()
 
     }
     
@@ -117,7 +126,26 @@ class HomeViewController: UIViewController {
         refreshControl.endRefreshing()
         pokemonsTableView.reloadData()
     }
-        
+       
+    func loadImage(){
+        guard let imgUrl = URL(string: imgLink) else {
+            return
+        }
+        imageLoader.loadImage(url: imgUrl) { results in
+            switch results {
+            case .success(let image):
+                self.loadedImg = image
+                 print(image)
+                self.pokemonsTableView.reloadData()
+            case .failure(let error):
+                print(error.localizedDescription)
+                break
+            }
+            
+        }
+    }
+    
+    
 
 // MARK: - Additional Functions :
     @objc private func refreshPokemons(_ sender: Any) {
@@ -147,6 +175,8 @@ class HomeViewController: UIViewController {
         }
     
     }
+    
+    
 
 
 }
@@ -168,6 +198,9 @@ extension HomeViewController: UITableViewDataSource {
         cell!.layer.cornerRadius = 10
         cell!.backgroundColor = UIColor(white: 0.7, alpha: 0.2)
         cell!.textLabel?.textColor = .black
+        
+        cell?.imageView?.image = cellImg
+        
         return cell!
 
     }
@@ -190,7 +223,7 @@ extension HomeViewController: UITableViewDelegate {
     }
 }
 
-//MARK: - Update searchResults: 
+//MARK: - Update searchResults:
 extension HomeViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let text = searchController.searchBar.text else { return }

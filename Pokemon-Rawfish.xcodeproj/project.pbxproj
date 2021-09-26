@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5117D93B26FF680600F8D7EE /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5117D93A26FF680600F8D7EE /* ImageLoader.swift */; };
 		51771DBE26ED171A00A8186D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51771DBD26ED171A00A8186D /* AppDelegate.swift */; };
 		51771DC026ED171A00A8186D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51771DBF26ED171A00A8186D /* SceneDelegate.swift */; };
 		51771DC226ED171A00A8186D /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51771DC126ED171A00A8186D /* HomeViewController.swift */; };
@@ -18,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5117D93A26FF680600F8D7EE /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		51771DBA26ED171A00A8186D /* Pokemon-Rawfish.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pokemon-Rawfish.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		51771DBD26ED171A00A8186D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		51771DBF26ED171A00A8186D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -63,6 +65,7 @@
 				51771DDC26ED24F100A8186D /* Models */,
 				51771DD926ED24BF00A8186D /* Delegates */,
 				51771DC126ED171A00A8186D /* HomeViewController.swift */,
+				5117D93A26FF680600F8D7EE /* ImageLoader.swift */,
 				51771DEC26EFFBEE00A8186D /* DetailsViewController.swift */,
 				51771DC626ED171C00A8186D /* Assets.xcassets */,
 				51771DC826ED171C00A8186D /* LaunchScreen.storyboard */,
@@ -158,6 +161,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5117D93B26FF680600F8D7EE /* ImageLoader.swift in Sources */,
 				51771DF026F0C2FC00A8186D /* PokemonDetails.swift in Sources */,
 				51771DC226ED171A00A8186D /* HomeViewController.swift in Sources */,
 				51771DBE26ED171A00A8186D /* AppDelegate.swift in Sources */,

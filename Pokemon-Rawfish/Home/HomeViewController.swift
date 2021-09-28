@@ -9,8 +9,11 @@ import UIKit
 
 class HomeViewController: UIViewController {
 
+    let imageLoader = ImageLoader()
+    
+   
+    
     private var pokemonsTableView: UITableView!
-    private var pokemonElement = [PokemonResult]()
     
     private var sortSwitch: UIButton!
     private let refreshControl = UIRefreshControl()
@@ -22,7 +25,11 @@ class HomeViewController: UIViewController {
     private var reuseIden = "Pokemon Identifier"
     let url = URL(string: "https://pokeapi.co/api/v2/pokemon/")!
 
-
+// MARK: - ModelView transformation
+    
+    var viewModel: ViewModel?
+    
+    
 
     
     override func viewDidLoad() {
@@ -30,6 +37,8 @@ class HomeViewController: UIViewController {
         // Do any additional setup after loading the view.
 
         view.backgroundColor = .white
+        
+        viewModel = HomeViewModel(viewController: self)
        
         // MARK: - Declaring Views
         pokemonsTableView = UITableView()
@@ -37,8 +46,8 @@ class HomeViewController: UIViewController {
         pokemonsTableView.dataSource = self
         pokemonsTableView.delegate = self
         pokemonsTableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIden)
-        pokemonsTableView.backgroundColor = .white
-        pokemonsTableView.separatorColor = .white
+//        pokemonsTableView.backgroundColor = .white
+//        pokemonsTableView.separatorColor = .white
         view.addSubview(pokemonsTableView)
 
         pokemonsTableView.addSubview(refreshControl)
@@ -56,7 +65,7 @@ class HomeViewController: UIViewController {
         
         
         setupConstraints()
-        make(request: url)
+
 
     }
     
@@ -81,72 +90,33 @@ class HomeViewController: UIViewController {
         ])
     }
     
-    //MARK: - Handle Networking
+      
     
-    func make(request withURL: URL) {
-        var request = URLRequest(url: withURL)
-        request.httpMethod = "GET"
-        send(request: request)
-    }
-    
-    func handle(respone: (Data?, URLResponse?, Error?)) {
-        guard let data = respone.0 else {return }
-        do {
-            pokemonElement = try process(data: data)
-            updateUI()
-        } catch {
-          
-        }
-    }
-    
-    func send(request: URLRequest) {
-        let config = URLSessionConfiguration.default
-        let session = URLSession(configuration: config, delegate: nil, delegateQueue:OperationQueue.main)
-        let task = session.dataTask(with: request) {[weak self] (data, response, error) in
-            self?.handle(respone: (data, response, error))
-        }
-        task.resume()
-    }
-    
-    func process(data: Data) throws ->  [PokemonResult] {
-        let jsonData = try JSONDecoder().decode(PokemonElements.self, from: data)
-        return sortArr(arr: jsonData.results)
-    }
-    
-    func updateUI() {
-        refreshControl.endRefreshing()
-        pokemonsTableView.reloadData()
-    }
-        
 
 // MARK: - Additional Functions :
     @objc private func refreshPokemons(_ sender: Any) {
-        make(request: url)
-    }
-
-    func sortArr(arr: [PokemonResult]) -> [PokemonResult] {
-        return arr.sorted {
-            $0.name < $1.name
-        }
+        dataLoaded()
     }
     
 
     @objc func switchISPressed() {
         if(isSortedZA) {
-            pokemonElement = sortArr(arr: pokemonElement)
+//            pokemonElement = sortArr(arr: pokemonElement)
             sortSwitch.setImage(UIImage(named: "revSort"), for: .normal)
             isSortedZA = false
-            pokemonsTableView.reloadData()
+            pokemonsTableView!.reloadData()
         }
         else {
             sortSwitch.setImage(UIImage(named: "sort"), for: .normal)
-            pokemonElement = pokemonElement.reversed()
+//            pokemonElement = pokemonElement.reversed()
             isSortedZA = true
-            pokemonsTableView.reloadData()
+            pokemonsTableView!.reloadData()
 
         }
     
     }
+    
+    
 
 
 }
@@ -155,19 +125,22 @@ class HomeViewController: UIViewController {
 
 extension HomeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return pokemonElement.count
+        viewModel!.numberOfPokemons
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = pokemonsTableView.dequeueReusableCell(withIdentifier: reuseIden)
-        cell!.textLabel?.text = pokemonElement[indexPath.row].name.uppercased()
+//        cell!.textLabel?.text = pokemonElement[indexPath.row].name.uppercased()
         cell!.layer.borderColor = UIColor(white: 0.7, alpha: 0.2).cgColor
         cell!.layer.borderWidth = 2
         cell!.layer.cornerRadius = 10
         cell!.backgroundColor = UIColor(white: 0.7, alpha: 0.2)
         cell!.textLabel?.textColor = .black
+//
+//        cell?.imageView?.image = cellImg
+        let data = viewModel?.data(for: indexPath)
+        cell?.textLabel?.text = data?.name.uppercased()
         return cell!
 
     }
@@ -183,14 +156,15 @@ extension HomeViewController: UITableViewDelegate {
 
         pokemonsTableView.deselectRow(at: indexPath, animated: true)
         let detailsView = DetailsViewController()
-        detailsView.url = pokemonElement[indexPath.row].url
-        detailsView.pokemonName = pokemonElement[indexPath.row].name
-        
+        let data = viewModel?.data(for: indexPath)
+        detailsView.url = data!.url
+        detailsView.pokemonName = data!.name
+
         present(detailsView, animated: true, completion: nil)
     }
 }
 
-//MARK: - Update searchResults: 
+//MARK: - Update searchResults:
 extension HomeViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let text = searchController.searchBar.text else { return }
@@ -199,3 +173,22 @@ extension HomeViewController: UISearchResultsUpdating {
 }
 
 
+extension HomeViewController: NotifaiableController {
+    func dataLoaded() {
+        pokemonsTableView.reloadData()
+        refreshControl.endRefreshing()
+    }
+    
+    
+}
+extension HomeViewController: LoadableController {
+    func showLoader() {
+        
+    }
+    
+    func hideLoader() {
+        
+    }
+    
+    
+}

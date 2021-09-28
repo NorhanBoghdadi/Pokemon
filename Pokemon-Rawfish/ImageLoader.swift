@@ -7,7 +7,9 @@
 
 import UIKit
 
+
 typealias imageResponse = ((Result<UIImage, Error>) -> ())
+
 class ImageLoader {
     
     var urlSession: URLSession
@@ -31,7 +33,7 @@ class ImageLoader {
         dataTask.resume()
     }
     
-    func handleDataResponse(data: Data?, urlResponse: URLResponse?, error: Error?) -> Result<UIImage, Error> {
+    private func handleDataResponse(data: Data?, urlResponse: URLResponse?, error: Error?) -> Result<UIImage, Error> {
        
         if let data = data, let image = UIImage(data: data) {
             

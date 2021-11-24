@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class HomeViewController: UIViewController {
 
@@ -46,8 +47,6 @@ class HomeViewController: UIViewController {
         pokemonsTableView.dataSource = self
         pokemonsTableView.delegate = self
         pokemonsTableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIden)
-//        pokemonsTableView.backgroundColor = .white
-//        pokemonsTableView.separatorColor = .white
         view.addSubview(pokemonsTableView)
 
         pokemonsTableView.addSubview(refreshControl)
@@ -101,7 +100,6 @@ class HomeViewController: UIViewController {
 
     @objc func switchISPressed() {
         if(isSortedZA) {
-//            pokemonElement = sortArr(arr: pokemonElement)
             sortSwitch.setImage(UIImage(named: "revSort"), for: .normal)
             isSortedZA = false
             pokemonsTableView!.reloadData()
@@ -131,14 +129,11 @@ extension HomeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = pokemonsTableView.dequeueReusableCell(withIdentifier: reuseIden)
-//        cell!.textLabel?.text = pokemonElement[indexPath.row].name.uppercased()
         cell!.layer.borderColor = UIColor(white: 0.7, alpha: 0.2).cgColor
         cell!.layer.borderWidth = 2
         cell!.layer.cornerRadius = 10
         cell!.backgroundColor = UIColor(white: 0.7, alpha: 0.2)
         cell!.textLabel?.textColor = .black
-//
-//        cell?.imageView?.image = cellImg
         let data = viewModel?.data(for: indexPath)
         cell?.textLabel?.text = data?.name.uppercased()
         return cell!

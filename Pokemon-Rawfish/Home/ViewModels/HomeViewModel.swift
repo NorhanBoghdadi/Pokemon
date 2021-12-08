@@ -6,14 +6,18 @@
 //
 
 import UIKit
+import Combine
+import SwiftUI
 
-
-class HomeViewModel: ViewModel  {
+class HomeViewModel: ViewModel {
     
     let imageLoader = ImageLoader()
 
     let imgLink = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
     let dataUrl = URL(string: "https://pokeapi.co/api/v2/pokemon/")!
+    
+    var apiSession: APIService
+    var cancellables = Set<AnyCancellable>()
     
     var loadedImg: UIImage?
     var cellImg: UIImage {
@@ -25,18 +29,21 @@ class HomeViewModel: ViewModel  {
         pokemonElement.count
     }
     
-    var pokemonElement = [PokemonResult]()
+    @Published var pokemonElement = [PokemonResult]()
     
     
     var viewController: DataLoaderController?
     
     
-    init(viewController: DataLoaderController) {
+    init(viewController: DataLoaderController, apiSession: APIService = APISession() ) {
         self.viewController = viewController
+        self.apiSession = apiSession
         DispatchQueue.main.async {
+            let shared = HomeViewModel(viewController: viewController)
             viewController?.dataLoaded()
         }
-        make(request: dataUrl)
+//        make(request: dataUrl)
+        getPokemonList()
         
     }
     
@@ -103,6 +110,30 @@ class HomeViewModel: ViewModel  {
         return arr.sorted {
             $0.name < $1.name
         }
+        
     }
     
+    func  reverse(_ arr: [PokemonResult]) -> [PokemonResult] {
+        return sortArr(arr: arr).reversed()
+    }
+    
+}
+
+extension HomeViewModel: ObservableObject, PokemonService {
+   
+    func getPokemonList() {
+        let cancellable = self.getPokemonList()
+            .sink(receiveCompletion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Handle error: \(error)")
+                case .finished:
+                    break
+                }
+                
+            }) { (pokemonElement) in
+                self.pokemonElement = pokemonElement.results
+        }
+        cancellables.insert(cancellable)
+    }
 }

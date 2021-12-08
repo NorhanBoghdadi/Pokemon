@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5117D93B26FF680600F8D7EE /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5117D93A26FF680600F8D7EE /* ImageLoader.swift */; };
+		5119E50F274BC8C6005071DB /* NetworkLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5119E50E274BC8C6005071DB /* NetworkLoader.swift */; };
 		5130CED627037D7900A0F797 /* DetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5130CED527037D7900A0F797 /* DetailsViewModel.swift */; };
 		51771DBE26ED171A00A8186D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51771DBD26ED171A00A8186D /* AppDelegate.swift */; };
 		51771DC026ED171A00A8186D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51771DBF26ED171A00A8186D /* SceneDelegate.swift */; };
@@ -19,11 +20,11 @@
 		51771DF026F0C2FC00A8186D /* PokemonDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51771DEF26F0C2FB00A8186D /* PokemonDetails.swift */; };
 		517C808D2701E0B50057E890 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517C808C2701E0B50057E890 /* HomeViewModel.swift */; };
 		517C80912701E0DA0057E890 /* ViewModelProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517C80902701E0DA0057E890 /* ViewModelProtocols.swift */; };
-		51A39F362701F3AF00CFDC2A /* HomeGetPokemons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A39F352701F3AF00CFDC2A /* HomeGetPokemons.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		5117D93A26FF680600F8D7EE /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
+		5119E50E274BC8C6005071DB /* NetworkLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLoader.swift; sourceTree = "<group>"; };
 		5130CED527037D7900A0F797 /* DetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewModel.swift; sourceTree = "<group>"; };
 		51771DBA26ED171A00A8186D /* Pokemon-Rawfish.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pokemon-Rawfish.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		51771DBD26ED171A00A8186D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -37,7 +38,6 @@
 		51771DEF26F0C2FB00A8186D /* PokemonDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonDetails.swift; sourceTree = "<group>"; };
 		517C808C2701E0B50057E890 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		517C80902701E0DA0057E890 /* ViewModelProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelProtocols.swift; sourceTree = "<group>"; };
-		51A39F352701F3AF00CFDC2A /* HomeGetPokemons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeGetPokemons.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +51,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5119E50D274BC8B6005071DB /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				5119E50E274BC8C6005071DB /* NetworkLoader.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		5130CED427037D5A00A0F797 /* Details */ = {
 			isa = PBXGroup;
 			children = (
@@ -79,6 +87,7 @@
 		51771DBC26ED171A00A8186D /* Pokemon-Rawfish */ = {
 			isa = PBXGroup;
 			children = (
+				5119E50D274BC8B6005071DB /* Shared */,
 				5130CED427037D5A00A0F797 /* Details */,
 				517C80942701E1650057E890 /* Home */,
 				51771DDC26ED24F100A8186D /* Models */,
@@ -87,7 +96,6 @@
 				51771DC626ED171C00A8186D /* Assets.xcassets */,
 				51771DC826ED171C00A8186D /* LaunchScreen.storyboard */,
 				51771DCB26ED171C00A8186D /* Info.plist */,
-				51A39F352701F3AF00CFDC2A /* HomeGetPokemons.swift */,
 			);
 			path = "Pokemon-Rawfish";
 			sourceTree = "<group>";
@@ -202,8 +210,8 @@
 				51771DC226ED171A00A8186D /* HomeViewController.swift in Sources */,
 				517C808D2701E0B50057E890 /* HomeViewModel.swift in Sources */,
 				51771DBE26ED171A00A8186D /* AppDelegate.swift in Sources */,
-				51A39F362701F3AF00CFDC2A /* HomeGetPokemons.swift in Sources */,
 				51771DDE26ED253900A8186D /* PokemonElements.swift in Sources */,
+				5119E50F274BC8C6005071DB /* NetworkLoader.swift in Sources */,
 				5130CED627037D7900A0F797 /* DetailsViewModel.swift in Sources */,
 				517C80912701E0DA0057E890 /* ViewModelProtocols.swift in Sources */,
 				51771DC026ED171A00A8186D /* SceneDelegate.swift in Sources */,
